@@ -16,6 +16,14 @@
          Neutral Cards: #FFFFFF
     -->
 
+    <!-- Application Structure Plan:
+         1. Hero Section: High-level Executive Summary.
+         2. Strategic Comparison Dashboard: Radar Chart & Bar Chart.
+         3. The F2C Lifecycle: Interactive process flow.
+         4. Departmental Action Hub (Tabbed Interface): R&D, QA, PC tasks.
+         5. Roadmap & Decisions: Updated decisions for CVS channels.
+    -->
+
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -76,6 +84,15 @@
             background-color: #E2E8F0;
             z-index: 0;
         }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-teal-100 selection:text-teal-900">
@@ -104,7 +121,7 @@
                 從「日配受限」到<span class="text-teal-600">「全面掌握」</span>
             </h1>
             <p class="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed">
-                本專案旨在導入「凍轉藏 (F2C)」模式，透過生產與物流的解耦，徹底解決超商允收期痛點，實現 <span class="font-bold text-gray-800">100% 允收合格率</span> 與 <span class="font-bold text-gray-800">極大化生產規模效益</span>。
+                本專案旨在導入「凍轉藏 (F2C)」模式，透過生產與物流的解耦，徹底解決超商允收期痛點，實現 <span class="font-bold text-gray-800">100% 允收合格率</span>。
             </p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -119,7 +136,7 @@
                 <div class="card p-6 border-t-4 border-orange-500">
                     <div class="text-gray-500 text-sm font-medium uppercase tracking-wider">生產模式變革</div>
                     <div class="mt-2 text-2xl font-bold text-gray-900">計畫性大批量</div>
-                    <p class="mt-2 text-sm text-gray-600">取代高頻小量，降低換線成本</p>
+                    <p class="mt-2 text-sm text-gray-600">取代高頻小量，降低成本</p>
                 </div>
                 <div class="card p-6 border-t-4 border-gray-500">
                     <div class="text-gray-500 text-sm font-medium uppercase tracking-wider">風險控制</div>
@@ -135,9 +152,7 @@
                     <span class="w-2 h-8 bg-teal-500 rounded-full"></span>
                     效益評估：傳統 vs. F2C
                 </h2>
-                <p class="mt-2 text-gray-600">
-                    透過數據可視化，對比兩種模式在品質、成本與穩定性上的表現。F2C 策略在各項關鍵指標上均展現顯著優勢。
-                </p>
+                <p class="mt-2 text-gray-600">F2C 策略在各項關鍵指標上均展現顯著優勢，特別是在允收與成本效率方面。</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -147,7 +162,6 @@
                         <canvas id="comparisonRadar"></canvas>
                     </div>
                 </div>
-
                 <div class="flex flex-col">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">生產效率結構改變</h3>
                     <div class="chart-container bg-gray-50 rounded-xl p-4">
@@ -163,9 +177,6 @@
                     <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
                     供應鏈流程重構
                 </h2>
-                <p class="mt-2 text-gray-600">
-                    從 -18°C 到 4°C 的關鍵轉化。請將滑鼠游標移至卡片上方查看詳細作業內容。
-                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
@@ -176,15 +187,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mt-1">冷凍生產</h3>
                             <div class="text-4xl mt-2 mb-4">🏭</div>
                         </div>
-                        <p class="text-sm text-gray-600 font-medium">大批量集中製造，急速冷凍至 -18°C。</p>
-                        <div class="absolute inset-0 bg-blue-600 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
-                            <p class="font-bold mb-2">關鍵優勢：</p>
-                            <ul class="text-sm list-disc list-inside space-y-1">
-                                <li>生產效率極大化</li>
-                                <li>建立安全庫存</li>
-                                <li>減少換線損耗</li>
-                            </ul>
-                        </div>
+                        <p class="text-sm text-gray-600">大批量集中製造，急速冷凍至 -18°C。</p>
                     </div>
                 </div>
 
@@ -199,15 +202,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mt-1">冷凍倉儲</h3>
                             <div class="text-4xl mt-2 mb-4">❄️</div>
                         </div>
-                        <p class="text-sm text-gray-600 font-medium">庫存緩衝區，效期可長達數月。</p>
-                        <div class="absolute inset-0 bg-blue-500 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
-                            <p class="font-bold mb-2">調度策略：</p>
-                            <ul class="text-sm list-disc list-inside space-y-1">
-                                <li>應對節慶旺季</li>
-                                <li>緩衝突發訂單</li>
-                                <li>減少缺貨風險</li>
-                            </ul>
-                        </div>
+                        <p class="text-sm text-gray-600">建立緩衝庫存，效期可達數月。</p>
                     </div>
                 </div>
 
@@ -222,15 +217,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mt-1">解凍與貼標</h3>
                             <div class="text-4xl mt-2 mb-4">🏷️</div>
                         </div>
-                        <p class="text-sm text-gray-800 font-bold">效期起算點重置。SOP 關鍵控制點。</p>
-                         <div class="absolute inset-0 bg-orange-500 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
-                            <p class="font-bold mb-2">作業重點：</p>
-                            <ul class="text-sm list-disc list-inside space-y-1">
-                                <li>決定解凍點 (工廠/DC)</li>
-                                <li>二次貼標檢核</li>
-                                <li>確保 100% 允收</li>
-                            </ul>
-                        </div>
+                        <p class="text-sm text-gray-800 font-bold">效期起算點重置。100% 允收關鍵。</p>
                     </div>
                 </div>
 
@@ -245,15 +232,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mt-1">冷藏販售</h3>
                             <div class="text-4xl mt-2 mb-4">🏪</div>
                         </div>
-                        <p class="text-sm text-gray-600 font-medium">4°C 新鮮上架，滿足消費者需求。</p>
-                         <div class="absolute inset-0 bg-teal-600 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
-                            <p class="font-bold mb-2">終端效益：</p>
-                            <ul class="text-sm list-disc list-inside space-y-1">
-                                <li>新鮮度感知一致</li>
-                                <li>極低貨架缺貨率</li>
-                                <li>銷售機會極大化</li>
-                            </ul>
-                        </div>
+                        <p class="text-sm text-gray-600">4°C 新鮮上架，滿足通路允收。</p>
                     </div>
                 </div>
             </div>
@@ -273,13 +252,16 @@
                 </button>
             </div>
 
+            <!-- Tab Content for R&D (UPDATED) -->
             <div id="content-rd" class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
                 <div class="space-y-4">
-                    <h3 class="text-lg font-bold text-teal-700">配方優化技術</h3>
+                    <h3 class="text-lg font-bold text-teal-700">加工技術優化</h3>
                     <ul class="space-y-3">
-                        <li class="flex items-start bg-teal-50 p-3 rounded-lg">
+                        <li class="flex items-start bg-teal-50 p-3 rounded-lg border-l-4 border-teal-500">
                             <span class="text-teal-500 mr-2 text-xl">•</span>
-                            <span class="text-gray-700 text-sm"><strong>抗凍澱粉應用：</strong>針對米飯、麵食類產品，添加抗老化配方，防止解凍後口感回生變硬。</span>
+                            <span class="text-gray-700 text-sm">
+                                <strong>抗凍加工品應用：</strong>針對雞胸、排骨、肉丸類產品，配方是否調整?，防止解凍後口感回生變硬。
+                            </span>
                         </li>
                         <li class="flex items-start bg-teal-50 p-3 rounded-lg">
                             <span class="text-teal-500 mr-2 text-xl">•</span>
@@ -384,7 +366,6 @@
     <footer class="bg-gray-100 mt-12 py-8 border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
             <p>凍轉藏 (F2C) 策略開發與執行計畫報告</p>
-            <!-- Updated Reported By to 業務二處 -->
             <p class="mt-1">會議時間：12/24 09:30 | 報告人：業務二處</p>
         </div>
     </footer>
@@ -442,7 +423,7 @@
         new Chart(barCtx, {
             type: 'bar',
             data: {
-                labels: ["換線頻率", "單批次產量"],
+                labels: ["換線頻率", "單批產量"],
                 datasets: [
                     {
                         label: '傳統日配',
