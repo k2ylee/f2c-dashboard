@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project F2C: 凍轉藏策略執行儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Professional
+         Background: #FDFBF7 (Warm Off-White)
+         Primary Text: #2D3748 (Dark Slate)
+         Accent Primary: #319795 (Teal)
+         Accent Secondary: #DD6B20 (Burnt Orange)
+         Neutral Cards: #FFFFFF
+    -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF7;
+            color: #2D3748;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #319795;
+            color: #2D3748;
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: #718096;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: #319795;
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 15px;
+            width: 2px;
+            background-color: #E2E8F0;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal-100 selection:text-teal-900">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold">F2C</div>
+                    <span class="font-bold text-xl tracking-tight text-gray-800">凍轉藏策略儀表板</span>
+                </div>
+                <div class="text-sm text-gray-500 font-medium hidden sm:block">
+                    會議日期: 12/24 | 專案代號: Optimization
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <section class="text-center space-y-6">
+            <div class="inline-block px-4 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold mb-2">
+                核心目標：突破冷藏物流極限
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                從「日配受限」到<span class="text-teal-600">「全面掌握」</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed">
+                本專案旨在導入「凍轉藏 (F2C)」模式，透過生產與物流的解耦，徹底解決超商允收期痛點，實現 <span class="font-bold text-gray-800">100% 允收合格率</span> 與 <span class="font-bold text-gray-800">極大化生產規模效益</span>。
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="card p-6 border-t-4 border-teal-500">
+                    <div class="text-gray-500 text-sm font-medium uppercase tracking-wider">目標允收合格率</div>
+                    <div class="mt-2 flex items-baseline justify-center gap-2">
+                        <span class="text-5xl font-bold text-gray-900">100</span>
+                        <span class="text-xl text-teal-600 font-bold">%</span>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600">解決物流延遲拒收問題</p>
+                </div>
+                <div class="card p-6 border-t-4 border-orange-500">
+                    <div class="text-gray-500 text-sm font-medium uppercase tracking-wider">生產模式變革</div>
+                    <div class="mt-2 text-2xl font-bold text-gray-900">計畫性大批量</div>
+                    <p class="mt-2 text-sm text-gray-600">取代高頻小量，降低換線成本</p>
+                </div>
+                <div class="card p-6 border-t-4 border-gray-500">
+                    <div class="text-gray-500 text-sm font-medium uppercase tracking-wider">風險控制</div>
+                    <div class="mt-2 text-2xl font-bold text-gray-900">庫存緩衝機制</div>
+                    <p class="mt-2 text-sm text-gray-600">有效應對急單與缺貨</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-teal-500 rounded-full"></span>
+                    效益評估：傳統 vs. F2C
+                </h2>
+                <p class="mt-2 text-gray-600">
+                    透過數據可視化，對比兩種模式在品質、成本與穩定性上的表現。F2C 策略在各項關鍵指標上均展現顯著優勢。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">全方位指標評分</h3>
+                    <div class="chart-container bg-gray-50 rounded-xl p-4">
+                        <canvas id="comparisonRadar"></canvas>
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">生產效率結構改變</h3>
+                    <div class="chart-container bg-gray-50 rounded-xl p-4">
+                        <canvas id="productionBar"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="mb-8 text-center md:text-left">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center justify-center md:justify-start gap-2">
+                    <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
+                    供應鏈流程重構
+                </h2>
+                <p class="mt-2 text-gray-600">
+                    從 -18°C 到 4°C 的關鍵轉化。請將滑鼠游標移至卡片上方查看詳細作業內容。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+                <div class="card group cursor-default relative overflow-hidden border-b-4 border-blue-600 h-full">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative bg-white">
+                        <div>
+                            <span class="text-xs font-bold text-blue-600 tracking-wider">STEP 01</span>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">冷凍生產</h3>
+                            <div class="text-4xl mt-2 mb-4">🏭</div>
+                        </div>
+                        <p class="text-sm text-gray-600 font-medium">大批量集中製造，急速冷凍至 -18°C。</p>
+                        <div class="absolute inset-0 bg-blue-600 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
+                            <p class="font-bold mb-2">關鍵優勢：</p>
+                            <ul class="text-sm list-disc list-inside space-y-1">
+                                <li>生產效率極大化</li>
+                                <li>建立安全庫存</li>
+                                <li>減少換線損耗</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center justify-center text-gray-300">
+                    <span class="text-4xl">&#10142;</span>
+                </div>
+
+                <div class="card group cursor-default relative overflow-hidden border-b-4 border-blue-400 h-full">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative bg-white">
+                        <div>
+                            <span class="text-xs font-bold text-blue-400 tracking-wider">STEP 02</span>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">冷凍倉儲</h3>
+                            <div class="text-4xl mt-2 mb-4">❄️</div>
+                        </div>
+                        <p class="text-sm text-gray-600 font-medium">庫存緩衝區，效期可長達數月。</p>
+                        <div class="absolute inset-0 bg-blue-500 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
+                            <p class="font-bold mb-2">調度策略：</p>
+                            <ul class="text-sm list-disc list-inside space-y-1">
+                                <li>應對節慶旺季</li>
+                                <li>緩衝突發訂單</li>
+                                <li>減少缺貨風險</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center justify-center text-gray-300">
+                    <span class="text-4xl">&#10142;</span>
+                </div>
+
+                <div class="card group cursor-default relative overflow-hidden border-b-4 border-orange-500 bg-orange-50 h-full transform scale-105 shadow-xl z-20">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <span class="text-xs font-bold text-orange-600 tracking-wider">CRITICAL POINT</span>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">解凍與貼標</h3>
+                            <div class="text-4xl mt-2 mb-4">🏷️</div>
+                        </div>
+                        <p class="text-sm text-gray-800 font-bold">效期起算點重置。SOP 關鍵控制點。</p>
+                         <div class="absolute inset-0 bg-orange-500 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
+                            <p class="font-bold mb-2">作業重點：</p>
+                            <ul class="text-sm list-disc list-inside space-y-1">
+                                <li>決定解凍點 (工廠/DC)</li>
+                                <li>二次貼標檢核</li>
+                                <li>確保 100% 允收</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center justify-center text-gray-300">
+                    <span class="text-4xl">&#10142;</span>
+                </div>
+
+                <div class="card group cursor-default relative overflow-hidden border-b-4 border-teal-500 h-full">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative bg-white">
+                        <div>
+                            <span class="text-xs font-bold text-teal-500 tracking-wider">STEP 04</span>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">冷藏販售</h3>
+                            <div class="text-4xl mt-2 mb-4">🏪</div>
+                        </div>
+                        <p class="text-sm text-gray-600 font-medium">4°C 新鮮上架，滿足消費者需求。</p>
+                         <div class="absolute inset-0 bg-teal-600 p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center">
+                            <p class="font-bold mb-2">終端效益：</p>
+                            <ul class="text-sm list-disc list-inside space-y-1">
+                                <li>新鮮度感知一致</li>
+                                <li>極低貨架缺貨率</li>
+                                <li>銷售機會極大化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">各部門執行重點 (Action Items)</h2>
+            <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+                <button onclick="switchTab('rd')" id="tab-rd" class="tab-active py-4 px-6 text-sm font-medium focus:outline-none transition-colors whitespace-nowrap">
+                    研發部門 (R&D)
+                </button>
+                <button onclick="switchTab('qa')" id="tab-qa" class="tab-inactive py-4 px-6 text-sm font-medium focus:outline-none transition-colors whitespace-nowrap">
+                    品保部門 (QA)
+                </button>
+                <button onclick="switchTab('pc')" id="tab-pc" class="tab-inactive py-4 px-6 text-sm font-medium focus:outline-none transition-colors whitespace-nowrap">
+                    生管部門 (PC)
+                </button>
+            </div>
+
+            <div id="content-rd" class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-teal-700">配方優化技術</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start bg-teal-50 p-3 rounded-lg">
+                            <span class="text-teal-500 mr-2 text-xl">•</span>
+                            <span class="text-gray-700 text-sm"><strong>抗凍澱粉應用：</strong>針對米飯、麵食類產品，添加抗老化配方，防止解凍後口感回生變硬。</span>
+                        </li>
+                        <li class="flex items-start bg-teal-50 p-3 rounded-lg">
+                            <span class="text-teal-500 mr-2 text-xl">•</span>
+                            <span class="text-gray-700 text-sm"><strong>防止離水 (Syneresis)：</strong>針對蛋白質與醬汁系統進行調整，確保解凍後不油水分離。</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-teal-700">品質還原測試</h3>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-2 font-semibold">凍藏穩定性測試 (Freeze-Thaw Stability)</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                            <div class="bg-teal-600 h-2.5 rounded-full" style="width: 33%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>-18°C 30天</span>
+                            <span>60天</span>
+                            <span>90天</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-qa" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-orange-700">食安驗證計畫</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start bg-orange-50 p-3 rounded-lg">
+                            <span class="text-orange-500 mr-2 text-xl">•</span>
+                            <span class="text-gray-700 text-sm"><strong>雙階段效期驗證：</strong>分別執行「冷凍期」與「解凍後冷藏期」的微生物保存試驗。</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-orange-700">標籤合規管理</h3>
+                    <div class="bg-white border-2 border-orange-100 p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 text-sm mb-2">二次貼標 SOP 關鍵要素</h4>
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div class="bg-gray-50 p-2 rounded text-center">解凍時間記錄</div>
+                            <div class="bg-gray-50 p-2 rounded text-center">操作員簽署</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-pc" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-blue-700">生產排程優化</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start bg-blue-50 p-3 rounded-lg">
+                            <span class="text-blue-500 mr-2 text-xl">•</span>
+                            <span class="text-gray-700 text-sm"><strong>模式轉換：</strong>由「日配高頻小量」轉換為「計畫性大批量」冷凍生產。</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <h2 class="text-xl font-bold text-gray-900 mb-6">專案進度排程 (Milestones)</h2>
+                <div class="relative pl-6 space-y-8 timeline-line">
+                    <div class="relative z-10">
+                        <div class="absolute -left-[31px] bg-teal-500 h-4 w-4 rounded-full border-2 border-white"></div>
+                        <h4 class="font-bold text-gray-800">1月 05日</h4>
+                        <p class="text-sm text-gray-600">研發提供第一版測試樣本與品評報告。</p>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="absolute -left-[31px] bg-gray-300 h-4 w-4 rounded-full border-2 border-white"></div>
+                        <h4 class="font-bold text-gray-800">1月 15日</h4>
+                        <p class="text-sm text-gray-600">品保啟動為期 14 天的微生物穩定性測試。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lg:col-span-1 bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 text-white flex flex-col justify-center">
+                <h2 class="text-xl font-bold mb-4 text-orange-400">待討論與決策事項</h2>
+                <p class="text-sm text-gray-400 mb-4">12/24 會議重點</p>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-start">
+                        <span class="mr-2 text-orange-400 font-bold">?</span>
+                        <span><strong>解凍點設定：</strong> 工廠解凍 vs. DC 解凍？</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-orange-400 font-bold">?</span>
+                        <span><strong>首波品項：</strong> 全家冷藏、萊爾富冷藏、711冷藏？</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-orange-400 font-bold">?</span>
+                        <span><strong>設備需求：</strong> 是否增購自動化貼標機？</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="mr-2 text-orange-400 font-bold">?</span>
+                        <span><strong>成本試算：</strong> 電費增加 vs. 規模經濟節省。</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-100 mt-12 py-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>凍轉藏 (F2C) 策略開發與執行計畫報告</p>
+            <!-- Updated Reported By to 業務二處 -->
+            <p class="mt-1">會議時間：12/24 09:30 | 報告人：業務二處</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.getElementById('content-rd').classList.add('hidden');
+            document.getElementById('content-qa').classList.add('hidden');
+            document.getElementById('content-pc').classList.add('hidden');
+            const tabs = ['rd', 'qa', 'pc'];
+            tabs.forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                tabEl.classList.remove('tab-active');
+                tabEl.classList.add('tab-inactive');
+            });
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.remove('tab-inactive');
+            activeTab.classList.add('tab-active');
+        }
+
+        Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
+        Chart.defaults.color = '#718096';
+
+        const radarCtx = document.getElementById('comparisonRadar').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ["允收合格率", "生產成本效益", "供貨穩定性", "報廢率控制"],
+                datasets: [
+                    {
+                        label: '傳統日配',
+                        data: [50, 40, 50, 30],
+                        fill: true,
+                        backgroundColor: 'rgba(160, 174, 192, 0.2)',
+                        borderColor: 'rgb(160, 174, 192)'
+                    },
+                    {
+                        label: 'F2C 策略',
+                        data: [100, 90, 90, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(49, 151, 149, 0.2)',
+                        borderColor: 'rgb(49, 151, 149)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { suggestedMin: 0, suggestedMax: 100 } }
+            }
+        });
+
+        const barCtx = document.getElementById('productionBar').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ["換線頻率", "單批次產量"],
+                datasets: [
+                    {
+                        label: '傳統日配',
+                        data: [90, 20],
+                        backgroundColor: 'rgba(160, 174, 192, 0.8)'
+                    },
+                    {
+                        label: 'F2C 模式',
+                        data: [20, 95],
+                        backgroundColor: 'rgba(49, 151, 149, 0.8)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+</body>
+</html>
